@@ -4,17 +4,17 @@ class AuthApi {
   }
 
   checkToken(token){
-    return fetch(this._url + '/users/me', {
+    return this._request(this._url + '/users/me', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       }
-    }).then(res => this._checkResponce(res));
+    });
   }
 
   registerUser(email, password){
-    return fetch(this._url + '/signup', {
+    return this._request(this._url + '/signup', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -23,11 +23,11 @@ class AuthApi {
         "email": email,
         "password": password
       })
-    }).then(res => this._checkResponce(res));
+    });
   }
 
   loginUser(email, password){
-    return fetch(this._url + '/signin', {
+    return this._request(this._url + '/signin', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -36,15 +36,20 @@ class AuthApi {
         "email": email,
         "password": password
       })
-    }).then(res => this._checkResponce(res));
+    });
   }
 
-  _checkResponce(res) {
+  _checkStatus(res) {
     if (res.ok)
       return res.json();
 
     return Promise.reject(`Ошибка Auth: ${res.status}`);
   }
+
+  _request(url, options) {
+    return fetch(url, options).then(this._checkStatus);
+  }
+
 }
 
 const authApi = new AuthApi({

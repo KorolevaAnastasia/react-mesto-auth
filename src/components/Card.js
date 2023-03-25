@@ -19,7 +19,6 @@ function Card(props) {
   }
 
   return(
-    <>
     <article className="card">
       {isOwn && <button type="button" aria-label="Удалить" className="card__delete-button" onClick={handleCardDelete}/>}
       <img className="card__img" src={props.link} alt={props.name} onClick={handleClick}/>
@@ -31,7 +30,6 @@ function Card(props) {
           </div>
         </div>
     </article>
-    </>
   )
 }
 

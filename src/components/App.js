@@ -31,6 +31,8 @@ function App() {
   const [isLoading, setIsLoading] = React.useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState('');
+  const isOpen = isEditProfilePopupOpen || isAddPlacePopupOpen || isInfoTooltipPopupOpen ||
+    isEditAvatarPopupOpen || selectedCard || isSubmitPopupOpen;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -57,15 +59,17 @@ function App() {
   }, [])
 
   useEffect(() => {
-    if (isEditProfilePopupOpen || isAddPlacePopupOpen || setIsInfoTooltipPopupOpen ||
-      isEditAvatarPopupOpen || selectedCard || isSubmitPopupOpen) {
-      document.addEventListener('keydown', handleEscClose);
+    function closeByEscape(evt) {
+      if (evt.code === 'Escape')
+        closeAllPopups();
+    }
+    if(isOpen) {
+      document.addEventListener('keydown', closeByEscape);
     }
     return () => {
-      document.removeEventListener('keydown', handleEscClose);
+      document.removeEventListener('keydown', closeByEscape);
     }
-  }, [isEditProfilePopupOpen, isAddPlacePopupOpen, setIsInfoTooltipPopupOpen,
-    isEditAvatarPopupOpen, selectedCard, isSubmitPopupOpen]);
+  }, [isOpen]);
 
 
   function handleRegisterUser(email, password) {
@@ -176,11 +180,6 @@ function App() {
 
   function handleCardClick(card) {
     setSelectedCard(card);
-  }
-
-  function handleEscClose(evt) {
-    if (evt.code === 'Escape')
-      closeAllPopups();
   }
 
   function handleOverlayClose() {

@@ -5,23 +5,23 @@ class Api {
   }
 
   getInitialCards() {
-    return fetch(
+    return this._request(
       this._url + '/cards', {
       method: 'GET',
       headers: this._headers
-    }).then(res => this._checkStatus(res));
+    });
   }
 
   getUserProfileData() {
-    return fetch(
+    return this._request(
       this._url + '/users/me', {
         method: 'GET',
         headers: this._headers
-      }).then(res => this._checkStatus(res));
+      });
   }
 
   updateUserProfileData(userData) {
-    return fetch(
+    return this._request(
       this._url + '/users/me', {
         method: 'PATCH',
         headers: this._headers,
@@ -29,22 +29,22 @@ class Api {
           name: userData.name,
           about: userData.about
         })
-      }).then(res => this._checkStatus(res));
+      });
   }
 
   changeUserProfileAvatar(avatarData){
-    return fetch(
+    return this._request(
       this._url + '/users/me/avatar', {
         method: 'PATCH',
         headers: this._headers,
         body: JSON.stringify({
           avatar: avatarData.avatar,
         })
-      }).then(res => this._checkStatus(res));
+      });
   }
 
   addCard(cardData){
-    return fetch(
+    return this._request(
       this._url + '/cards', {
         method: 'POST',
         headers: this._headers,
@@ -52,31 +52,31 @@ class Api {
           name: cardData.name,
           link: cardData.link
         })
-      }).then(res => this._checkStatus(res));
+      });
   }
 
   removeCard(cardId){
-    return fetch(
+    return this._request(
       this._url + `/cards/${cardId}`, {
         method: 'DELETE',
         headers: this._headers
-      }).then(res => this._checkStatus(res));
+      });
   }
 
   likeCard(cardId){
-    return fetch(
+    return this._request(
       this._url + `/cards/${cardId}/likes`, {
         method: 'PUT',
         headers: this._headers
-      }).then(res => this._checkStatus(res));
+      });
   }
 
   dislikeCard(cardId){
-    return fetch(
+    return this._request(
       this._url + `/cards/${cardId}/likes`, {
         method: 'DELETE',
         headers: this._headers
-      }).then(res => this._checkStatus(res));
+      });
   }
 
   changeLikeCardStatus(cardId, isLiked){
@@ -92,6 +92,10 @@ class Api {
       return res.json();
 
     return Promise.reject(`Ошибка ${res.status}`);
+  }
+
+  _request(url, options) {
+    return fetch(url, options).then(this._checkStatus);
   }
 
 }
